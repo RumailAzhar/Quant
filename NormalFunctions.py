@@ -1,5 +1,5 @@
 #Moro Algorithm for Inverse Normal CDF. Section2.1
-from math import log
+from math import log, pi, exp, sqrt
 def NormalInverseCDF(x):
     a = [
     2.50662823884,
@@ -49,3 +49,23 @@ def NormalInverseCDF(x):
         return t
     else:
         return -t
+def NormalCDF(x):
+    a = [1.330274429, 
+        -1.821255978, 
+        1.781477937, 
+        -0.356563782, 
+        0.31938153]
+    if x>0:
+        k = 1/(1 + 0.2316419*x)
+        p = 0
+        for num in a:
+            p += num
+            p *= k
+        p*=(-1/sqrt(2*pi))*exp(-(x**2)/2)
+        p+=1
+        return p
+    else:
+        return 1-NormalCDF(-x)
+
+
+
