@@ -49,13 +49,3 @@ def NormalInverseCDF(x):
         return t
     else:
         return -t
-
-import matplotlib.pyplot as plt
-import numpy as np
-
-x = np.arange(0.001,0.999,0.001)
-y = np.zeros(len(x))
-for i, num in enumerate(x):
-    y[i] = NormalInverseCDF(x[i])
-plt.plot(x,y)
-plt.show()
