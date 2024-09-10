@@ -1,2 +1,2 @@
 # Quant
-Adding Jupyter Notebook to test Normal Inverse CDF Function . 
+A collection of my implementations and tests of various methods and tools used in quantitative finance. Based on project work suggested in the book 'The Concepts and Practice of Mathematical Finance' by Mark S. Joshi.
