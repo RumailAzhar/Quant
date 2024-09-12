@@ -1,7 +1,7 @@
 from math import exp, log, sqrt
 from NormalFunctions import NormalCDF
 
-def FuturePrice(S,K,T,r,d):
+def ForwardPrice(S,K,T,r,d):
     P=exp((r-d)*T)*S - K
     P*=exp(-r*T)
     return P
