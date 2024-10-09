@@ -9,4 +9,4 @@ A collection of my implementations and tests of various methods and tools used i
 
 ## Next Steps:
 - Further validation and documentation of Monte Carlo pricer
-- Implement Greeks, Analytical and Monte Carlo
+- Implement Greeks, analytical and Monte Carlo
