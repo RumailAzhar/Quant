@@ -25,13 +25,13 @@ class GeometricBrownianMotion: #class that simulates GBM of stocks and prices de
         self.S_0 = S_0
         self.seed = seed
     
-    def final_values(self, n=1):
+    def final_values(self, n=1): #Directly find stock value at time T
         rng = RandomNumberGenerator(dimensionality=n, seed = self.seed)
         W = NormalInverseCDF(rng.generate())
         S_values = self.S_0 * np.exp((self.r - self.d)*self.T - 0.5*(self.vol**2)*self.T + self.vol*np.sqrt(self.T)*W)
         return S_values
     
-    def simulate_paths(self, n=1):
+    def simulate_paths(self, n=1): #Store intermedeate stock values at each time step
         dt = self.T/self.N_T #time step
         S_values = np.zeros([n,self.N_T])
         
@@ -46,7 +46,7 @@ class GeometricBrownianMotion: #class that simulates GBM of stocks and prices de
                 S_values[i,j]=S_values[i,j-1]*np.exp((self.r - self.d)*dt - 0.5*(self.vol**2)*dt + self.vol*np.sqrt(dt)*W[j])
         return S_values
     
-    def simulate_paths_euler(self, n=1):
+    def simulate_paths_euler(self, n=1): #Euler stepping for path simulation
         dt = self.T/self.N_T #time step
         S_values = np.zeros([n,self.N_T])
         
@@ -61,7 +61,7 @@ class GeometricBrownianMotion: #class that simulates GBM of stocks and prices de
                 S_values[i,j]=S_values[i,j-1]*(1 + (self.r - self.d - 0.5*(self.vol**2))*dt + self.vol * np.sqrt(dt) * W[j])
         return S_values
     
-    def plot_paths(self, n=1, method = 'exact'):
+    def plot_paths(self, n=1, method = 'exact'): #Plot full paths of stock price
         dt = self.T/self.N_T
         if method == 'exact':
             S_values = self.simulate_paths(n=n)
@@ -72,9 +72,15 @@ class GeometricBrownianMotion: #class that simulates GBM of stocks and prices de
             plt.plot(t_values, S_values[i,:])
         plt.show()
 
-    def monte_carlo_price(self, option = None, final_values = np.array([0])):
-        expected_payoff = np.exp(-self.r * self.T) * np.mean(option.payoff(final_values)) #discounted expectation of payoffs gives the risk neutral price
-        return expected_payoff
+    def monte_carlo_price(self, option = None, final_values = np.array([0]), return_variance = False): 
+        discounted_payoff = np.exp(-self.r * self.T) * option.payoff(final_values)
+        expected_payoff = np.mean(discounted_payoff) #discounted expectation of payoffs gives the risk neutral price
+        if not return_variance:
+            return expected_payoff
+        else:
+            sample_variance = np.mean(np.square(discounted_payoff)) - np.square(expected_payoff)
+            standard_error = np.sqrt(sample_variance/len(final_values))
+            return expected_payoff, sample_variance, standard_error #returning estimated price, sample variance and standard error
 
     
 
