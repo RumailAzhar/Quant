@@ -10,11 +10,19 @@ class RandomNumberGenerator:
         rng = np.random.default_rng(seed = self.seed) # PCG64 generator
         return rng.random(size = self.dimensionality) #returns numpy array of random uniform numbers in [0,1)
     
-class CallOption: #Classes for derivatives, specifying a payoff and time to maturity and other relevant parameters such as strike
-    def __init__(self, K = 0):
+class Option: #Classes for derivatives, specifying a payoff and time to maturity and other relevant parameters such as strike
+    def __init__(self, K = 0, option_type = 'call'):
+        #Possible types are 'call', 'put', 'dcall', 'dput', 'forward'. Note dcall and dput refer to digital call and put
         self.K = K
-        self.payoff = lambda S: np.maximum(0, S-K)
-
+        payoffs = {
+            'call': lambda S: np.maximum(0, S-self.K),
+            'put': lambda S: np.maximum(0, self.K - S),
+            'dcall': lambda S: np.where(S-self.K>0, 1, 0),
+            'dput': lambda S: np.where(self.K-S>0, 1, 0),
+            'forward': lambda S: S-self.K,
+        }
+        self.payoff = payoffs[option_type]
+        self.option_type = option_type
 class GeometricBrownianMotion: #class that simulates GBM of stocks and prices derivatives
     def __init__(self, r=0, d=0, T=0, vol = 0, N_T = 10, S_0 = 1, seed = None):
         self.r = r
